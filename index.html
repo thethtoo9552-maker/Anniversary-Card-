@@ -1,0 +1,431 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Love Story — Interactive Digital Love Card</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts for Romantic Typography Pairings -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Caveat:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* ==========================================================================
+       THEME VARIABLES & TYPOGRAPHY SYSTEM
+       ========================================================================== */
+    :root {
+      --bg-primary: #fff5f7;
+      --bg-secondary: #ffe4e9;
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --card-border: rgba(244, 63, 94, 0.18);
+      --text-primary: #3b121e;
+      --text-secondary: #7a3b4e;
+      --accent-primary: #e11d48;
+      --accent-secondary: #fb7185;
+      --accent-soft: #ffe4e6;
+      --gold-accent: #d4af37;
+      --shadow-color: rgba(225, 29, 72, 0.12);
+
+      --font-heading: 'Cormorant Garamond', Georgia, serif;
+      --font-script: 'Great Vibes', cursive;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    /* Theme 2: Midnight Velvet */
+    [data-theme="midnight"] {
+      --bg-primary: #13091f;
+      --bg-secondary: #221036;
+      --card-bg: rgba(34, 18, 52, 0.82);
+      --card-border: rgba(244, 114, 182, 0.25);
+      --text-primary: #fdf2f8;
+      --text-secondary: #fbcfe8;
+      --accent-primary: #f43f5e;
+      --accent-secondary: #f472b6;
+      --accent-soft: rgba(244, 63, 94, 0.18);
+      --gold-accent: #fbbf24;
+      --shadow-color: rgba(0, 0, 0, 0.45);
+    }
+
+    /* Theme 3: Golden Hour */
+    [data-theme="golden"] {
+      --bg-primary: #fffbeb;
+      --bg-secondary: #fef3c7;
+      --card-bg: rgba(255, 253, 245, 0.88);
+      --card-border: rgba(217, 119, 6, 0.22);
+      --text-primary: #451a03;
+      --text-secondary: #92400e;
+      --accent-primary: #d97706;
+      --accent-secondary: #f59e0b;
+      --accent-soft: #fef3c7;
+      --gold-accent: #b45309;
+      --shadow-color: rgba(217, 119, 6, 0.14);
+    }
+
+    /* Theme 4: Lavender Dream */
+    [data-theme="lavender"] {
+      --bg-primary: #faf5ff;
+      --bg-secondary: #f3e8ff;
+      --card-bg: rgba(255, 255, 255, 0.86);
+      --card-border: rgba(147, 51, 234, 0.18);
+      --text-primary: #2e1065;
+      --text-secondary: #6b21a8;
+      --accent-primary: #9333ea;
+      --accent-secondary: #c084fc;
+      --accent-soft: #f3e8ff;
+      --gold-accent: #d4af37;
+      --shadow-color: rgba(147, 51, 234, 0.12);
+    }
+
+    /* Font Pairings */
+    [data-font="classic"] {
+      --font-heading: 'Cormorant Garamond', serif;
+      --font-script: 'Great Vibes', cursive;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    [data-font="modern"] {
+      --font-heading: 'Playfair Display', serif;
+      --font-script: 'Playfair Display', serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    [data-font="vintage"] {
+      --font-heading: 'Cormorant Garamond', serif;
+      --font-script: 'Caveat', cursive;
+      --font-body: 'Cormorant Garamond', serif;
+    }
+
+    /* Base Styling */
+    body {
+      background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-primary) 100%);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background 0.5s ease, color 0.4s ease;
+    }
+
+    .font-heading { font-family: var(--font-heading); }
+    .font-script { font-family: var(--font-script); }
+    .font-body { font-family: var(--font-body); }
+
+    /* Luxury Glass Card */
+    .love-card-surface {
+      background: var(--card-bg);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--card-border);
+      box-shadow: 0 20px 50px var(--shadow-color);
+      transition: all 0.4s ease;
+    }
+
+    .accent-text { color: var(--accent-primary); }
+    .secondary-text { color: var(--text-secondary); }
+    .accent-bg { background-color: var(--accent-primary); }
+    .accent-soft-bg { background-color: var(--accent-soft); }
+
+    /* ==========================================================================
+       3D FLIPPABLE ANNIVERSARY POSTCARD
+       ========================================================================== */
+    .perspective-1000 {
+      perspective: 1200px;
+    }
+    .postcard-inner {
+      position: relative;
+      width: 100%;
+      min-height: 400px;
+      transition: transform 0.85s cubic-bezier(0.4, 0.2, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+    .postcard-flipped .postcard-inner {
+      transform: rotateY(180deg);
+    }
+    .postcard-front,
+    .postcard-back {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 1.5rem;
+    }
+    .postcard-back {
+      transform: rotateY(180deg);
+    }
+
+    /* Postage Stamp Serrated Edge Effect */
+    .postage-stamp {
+      background: var(--bg-primary);
+      border: 2px dashed var(--accent-primary);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Wax Seal Styling */
+    .wax-seal {
+      background: radial-gradient(circle at 30% 30%, #f43f5e, #9f1239);
+      box-shadow:
+        inset 0 2px 5px rgba(255, 255, 255, 0.4),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.4),
+        0 6px 15px rgba(159, 18, 57, 0.4);
+    }
+
+    /* Polaroid Photo Hover Effects */
+    .polaroid-frame {
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.35s ease;
+    }
+    .polaroid-frame:hover {
+      transform: translateY(-8px) rotate(0deg) scale(1.02) !important;
+      z-index: 10;
+    }
+
+    /* Ambient Floating Particles Canvas */
+    #particles-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent-secondary);
+      border-radius: 9999px;
+    }
+
+    /* View Mode vs Edit Mode Controls */
+    body.view-mode .edit-only {
+      display: none !important;
+    }
+
+    /* Smooth Fade In */
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+    .animate-float {
+      animation: floatSlow 4s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body data-theme="rose" data-font="classic" class="antialiased selection:bg-rose-200 selection:text-rose-900">
+
+  <!-- Ambient Floating Particles Layer -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Floating Top Toolbar (Hidden or Minimal in Exported View Mode) -->
+  <header id="control-bar" class="fixed top-4 right-4 left-4 sm:left-auto z-40 flex flex-wrap items-center justify-center sm:justify-end gap-2">
+    <div class="love-card-surface rounded-full px-3 py-2 flex items-center gap-2 shadow-lg">
+      <!-- Mode Switcher Pill -->
+      <button id="toggle-mode-btn" onclick="toggleViewMode()"
+        class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all accent-bg text-white shadow-sm hover:opacity-90">
+        <i data-lucide="eye" class="w-4 h-4"></i>
+        <span id="mode-btn-text">Preview Card</span>
+      </button>
+
+      <!-- Open Customizer Drawer -->
+      <button id="open-drawer-btn" onclick="toggleDrawer(true)"
+        class="edit-only flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all accent-soft-bg accent-text hover:opacity-80">
+        <i data-lucide="sparkles" class="w-4 h-4"></i>
+        <span>Customize</span>
+      </button>
+
+      <!-- Quick Save Button -->
+      <button id="quick-save-btn" onclick="saveToLocalStorage(true)"
+        class="edit-only flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all border border-current/20 hover:bg-black/5">
+        <i data-lucide="heart-handshake" class="w-4 h-4 accent-text"></i>
+        <span class="hidden sm:inline">Save</span>
+      </button>
+
+      <!-- Export Standalone HTML Button -->
+      <button onclick="exportStandaloneHTML()"
+        class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all border border-current/20 hover:bg-black/5"
+        title="Download a standalone HTML file to send to your partner">
+        <i data-lucide="download" class="w-4 h-4 accent-text"></i>
+        <span class="hidden md:inline">Export Card</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ==========================================================================
+       SLIDE-OVER CUSTOMIZATION DRAWER
+       ========================================================================== -->
+  <aside id="customizer-drawer"
+    class="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-white/95 dark:bg-slate-900/95 text-slate-800 backdrop-blur-xl shadow-2xl border-l border-rose-200/50 transform translate-x-full transition-transform duration-300 ease-out flex flex-col">
+
+    <!-- Drawer Header -->
+    <div class="p-5 border-b border-rose-100 flex items-center justify-between bg-gradient-to-r from-rose-50 to-pink-50">
+      <div class="flex items-center gap-2.5">
+        <span class="p-2 rounded-xl bg-rose-500 text-white shadow-sm">
+          <i data-lucide="wand-2" class="w-5 h-5"></i>
+        </span>
+        <div>
+          <h2 class="font-bold text-slate-900 text-base">Love Card Studio</h2>
+          <p class="text-xs text-slate-500">Personalize every detail & save</p>
+        </div>
+      </div>
+      <button onclick="toggleDrawer(false)" class="p-2 rounded-full hover:bg-rose-100 text-slate-600 transition">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <!-- Drawer Navigation Tabs -->
+    <div class="flex border-b border-slate-200 bg-slate-50/80 px-2 pt-2 gap-1 text-xs font-medium overflow-x-auto">
+      <button onclick="switchDrawerTab('theme')" class="drawer-tab active px-3 py-2 rounded-t-lg border-b-2 border-rose-500 text-rose-600 bg-white" data-tab="theme">Theme & Hero</button>
+      <button onclick="switchDrawerTab('photos')" class="drawer-tab px-3 py-2 rounded-t-lg border-b-2 border-transparent text-slate-500 hover:text-slate-800" data-tab="photos">Photos</button>
+      <button onclick="switchDrawerTab('poem')" class="drawer-tab px-3 py-2 rounded-t-lg border-b-2 border-transparent text-slate-500 hover:text-slate-800" data-tab="poem">Poem</button>
+      <button onclick="switchDrawerTab('postcard')" class="drawer-tab px-3 py-2 rounded-t-lg border-b-2 border-transparent text-slate-500 hover:text-slate-800" data-tab="postcard">Postcard</button>
+      <button onclick="switchDrawerTab('video')" class="drawer-tab px-3 py-2 rounded-t-lg border-b-2 border-transparent text-slate-500 hover:text-slate-800" data-tab="video">Video & Save</button>
+    </div>
+
+    <!-- Drawer Body (Scrollable Forms) -->
+    <div class="flex-1 overflow-y-auto p-5 space-y-6 text-sm">
+
+      <!-- TAB 1: THEME, HERO & COUNTER -->
+      <div id="tab-theme" class="drawer-panel space-y-5">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Romantic Color Palette</label>
+          <div class="grid grid-cols-2 gap-2.5">
+            <button onclick="setTheme('rose')" class="theme-btn flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 hover:border-rose-400 transition text-left" data-theme-choice="rose">
+              <span class="w-5 h-5 rounded-full bg-gradient-to-tr from-rose-500 to-pink-300 shrink-0"></span>
+              <span class="font-medium text-xs">Rose Blush</span>
+            </button>
+            <button onclick="setTheme('midnight')" class="theme-btn flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 hover:border-purple-500 transition text-left" data-theme-choice="midnight">
+              <span class="w-5 h-5 rounded-full bg-gradient-to-tr from-purple-950 to-pink-500 shrink-0"></span>
+              <span class="font-medium text-xs">Midnight Velvet</span>
+            </button>
+            <button onclick="setTheme('golden')" class="theme-btn flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 hover:border-amber-400 transition text-left" data-theme-choice="golden">
+              <span class="w-5 h-5 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-200 shrink-0"></span>
+              <span class="font-medium text-xs">Golden Hour</span>
+            </button>
+            <button onclick="setTheme('lavender')" class="theme-btn flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 hover:border-violet-400 transition text-left" data-theme-choice="lavender">
+              <span class="w-5 h-5 rounded-full bg-gradient-to-tr from-purple-600 to-fuchsia-200 shrink-0"></span>
+              <span class="font-medium text-xs">Lavender Dream</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">Typography</label>
+            <select id="input-font" onchange="updateField('font', this.value)" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs bg-white">
+              <option value="classic">Classic Serif & Script</option>
+              <option value="modern">Modern Editorial</option>
+              <option value="vintage">Vintage Handwritten</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">Floating Particles</label>
+            <select id="input-particles" onchange="updateField('particles', this.value)" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs bg-white">
+              <option value="hearts">Floating Hearts</option>
+              <option value="petals">Rose Petals</option>
+              <option value="sparkles">Golden Sparkles</option>
+              <option value="none">None (Clean)</option>
+            </select>
+          </div>
+        </div>
+
+        <hr class="border-slate-200" />
+
+        <div class="space-y-3">
+          <h3 class="text-xs font-semibold uppercase tracking-wider text-rose-600">Couple & Hero Header</h3>
+          <div class="grid grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-xs text-slate-600 mb-1">Partner 1 Name</label>
+              <input type="text" id="input-partner1" oninput="updateField('partner1', this.value)" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-600 mb-1">Partner 2 Name</label>
+              <input type="text" id="input-partner2" oninput="updateField('partner2', this.value)" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs text-slate-600 mb-1">Romantic Headline</label>
+            <input type="text" id="input-headline" oninput="updateField('headline', this.value)" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs text-slate-600 mb-1">Subtitle / Dedication</label>
+            <textarea id="input-subtitle" rows="2" oninput="updateField('subtitle', this.value)" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"></textarea>
+          </div>
+        </div>
+
+        <hr class="border-slate-200" />
+
+        <div class="space-y-3">
+          <h3 class="text-xs font-semibold uppercase tracking-wider text-rose-600">Love Counter Start Date & Time</h3>
+          <div>
+            <label class="block text-xs text-slate-600 mb-1">Relationship / Anniversary Start</label>
+            <input type="datetime-local" id="input-startDate" onchange="updateField('startDate', this.value)" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs text-slate-600 mb-1">Counter Section Caption</label>
+            <input type="text" id="input-counterNote" oninput="updateField('counterNote', this.value)" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm" />
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: PHOTO MEMORIES -->
+      <div id="tab-photos" class="drawer-panel hidden space-y-4">
+        <p class="text-xs text-slate-500">Upload photos from your device (saved directly inside your card) or paste image URLs.</p>
+        <div id="photo-editors-list" class="space-y-4"></div>
+      </div>
+
+      <!-- TAB 3: LOVE POEM -->
+      <div id="tab-poem" class="drawer-panel hidden space-y-4">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">Choose a Romantic Poem Preset</label>
+          <select id="poem-preset-select" onchange="applyPoemPreset(this.value)" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm bg-white">
+            <option value="">-- Select a Preset Poem --</option>
+            <option value="eternal">1. Written in the Stars (Classic)</option>
+            <option value="compass">2. My Home, My Compass (Warm)</option>
+            <option value="quiet">3. In Every Quiet Moment (Intimate)</option>
+            <option value="forever">4. A Thousand Tomorrows (Anniversary)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs text-slate-600 mb-1">Poem Title</label>
+          <input type="text" id="input-poemTitle" oninput="updateField('poemTitle', this.value)" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm" />
+        </div>
+
+        <div>
+          <label class="block text-xs text-slate-600 mb-1">Poem Verses</label>
+          <textarea id="input-poemBody" rows="7" oninput="updateField('poemBody', this.value)" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm leading-relaxed"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs text-slate-600 mb-1">Author / Signature</label>
+          <input type="text" id="input-poemAuthor" oninput="updateField('poemAuthor', this.value)" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm" />
+        </div>
+      </div>
+
+      <!-- TAB 4: ANNIVERSARY POSTCARD -->
+      <div id="tab-postcard" class="drawer-panel hidden space-y-4">
+        <div class="p-3 rounded-xl bg-rose-50 text-xs text-rose-700 flex items-center justify-between">
+          <span>Tip: Click the postcard on the page to flip it!</span>
+          <button onclick="flipPostcard()" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-medium">Flip Now</button>
+        </div>
+
+        <div>
+          <label class="block text-xs text-slate-600 mb-1">Postcard Front Headline</label>
+          <input type="text" id="input-postcardFrontTitle" oninput="updateField('postcardFrontTitle', this.value)" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs text-slate-600 mb-1">Postcard Front Subt
